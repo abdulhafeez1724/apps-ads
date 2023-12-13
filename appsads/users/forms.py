@@ -11,7 +11,7 @@ class RegistrationForm(UserCreationForm):
 
         self.fields['password1'].help_text = None
         self.fields['password2'].help_text = None
-
+        
     class Meta:
         model = NewUser
         fields = ['name', 'username', 'email', 'platform']
