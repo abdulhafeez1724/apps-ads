@@ -30,11 +30,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
+    'allapps',
 ]
 
 AUTH_USER_MODEL = 'users.NewUser'
-
-LOGIN_URL = 'login' 
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
