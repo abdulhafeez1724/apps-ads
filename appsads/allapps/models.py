@@ -35,7 +35,7 @@ class Placement(models.Model):
     class Meta:
         verbose_name_plural = "Placements"
 
-class AdNetwork():
+class AdNetwork(models.Model):
     title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     index = models.IntegerField(default=0)
