@@ -1,0 +1,145 @@
+{% extends "../../app.html" %}
+{% load i18n static %}
+
+{% block title %}
+Apps
+{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Create App -->
+    <div class="card mb-">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Add New Apps</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3 row">
+                    <label for="id_name" class="col-md-2 col-form-label">{{ form.name.label }}</label> 
+                    <div class="col-md-10">
+                        {{ form.name }}
+                        {{ form.name.errors }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="id_package" class="col-md-2 col-form-label">{{ form.package.label }}</label> 
+                    <div class="col-md-10">
+                        {{ form.package }}
+                        {{ form.package.errors }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="id_links" class="col-md-2 col-form-label">{{ form.links.label }}</label> 
+                    <div class="col-md-10">
+                        {{ form.links }}
+                        {{ form.links.errors }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="id_icons" class="col-md-2 col-form-label">{{ form.icons.label }}</label> 
+                    <div class="col-md-10">
+                        {{ form.icons }}    
+                        {% if form.icons.value %}
+                            <img src="{{ form.icons.url }}" alt="{{ form.icons.label }}">
+                        {% endif %}
+                        {{ form.icons.errors }}
+                    </div>
+                </div>
+                
+                <div class="mb-3 row">
+                    <label for="id_adnetwork" class="col-md-2 col-form-label">Ad Network</label> 
+                    <div class="col-md-10">
+                        <input type="text" name="adnetwork" class="form-control" maxlength="200" required="" id="id_adnetwork">
+                    </div>
+                </div> 
+
+                <div class="mb-3 row">
+                    <label for="id_placements" class="col-md-2 col-form-label">Placements</label> 
+                    <div class="col-md-10">
+                        <input type="text" name="placements" class="form-control" maxlength="200" required="" id="id_placements">
+                    </div>
+                </div> 
+        
+                <div class="mb-3 row">
+                    <label for="id_platform" class="col-md-2 col-form-label">{{ form.platform.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.platform }}
+                        {{ form.platform.errors }}
+                    </div>
+                </div>
+        
+                <button type="submit" class="btn btn-primary">
+                    <span class="tf-icons bx bx-pie-chart-alt me-1"></span>Save
+                </button>
+            </form>
+        </div>
+        
+        
+    </div>
+    <!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Basic Bootstrap Table -->
+    <div class="card">
+        <h5 class="card-header">All Apps</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sr#</th>
+                        <th>Name</th>
+                        <th>Package</th>
+                        <th>Icon</th>
+                        <th>Added On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for all_app in all_apps %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <strong>{{ all_app.name }}</strong>
+                        </td>
+                        <td>{{ all_app.package }}</td>
+                        <td>
+                            <figure class="figure">
+                                <img src="{{ all_app.icons.url }}" Icon" style="max-height: 50px; max-width: 50px;">
+                            </figure>
+                        </td>
+                        <td>{{ all_app.created_at }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                   <a class="dropdown-item" href="{% url 'update' all_app.id %}">Update</a>
+                                   <a class="dropdown-item" href="{% url 'delete' all_app.id %}">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Basic Bootstrap Table -->
+</div>
+<!-- / Content -->
+</div>
+
+
+<!-- / Content -->
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

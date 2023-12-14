@@ -13,7 +13,7 @@ class Apps(models.Model):
         blank=False
     )
     added_by = models.ForeignKey(NewUser, on_delete=models.CASCADE)
-    created_at = created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     index = models.IntegerField(default=0)
 
     def __str__(self):
