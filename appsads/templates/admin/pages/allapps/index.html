@@ -47,10 +47,7 @@ Apps
                 <div class="mb-3 row">
                     <label for="id_icons" class="col-md-2 col-form-label">{{ form.icons.label }}</label> 
                     <div class="col-md-10">
-                        {{ form.icons }}    
-                        {% if form.icons.value %}
-                            <img src="{{ form.icons.url }}" alt="{{ form.icons.label }}">
-                        {% endif %}
+                        {{ form.icons }} 
                         {{ form.icons.errors }}
                     </div>
                 </div>
@@ -58,14 +55,14 @@ Apps
                 <div class="mb-3 row">
                     <label for="id_adnetwork" class="col-md-2 col-form-label">Ad Network</label> 
                     <div class="col-md-10">
-                        <input type="text" name="adnetwork" class="form-control" maxlength="200" required="" id="id_adnetwork">
+                        <input type="text" name="adnetwork" class="form-control" id="id_adnetwork">
                     </div>
                 </div> 
 
                 <div class="mb-3 row">
                     <label for="id_placements" class="col-md-2 col-form-label">Placements</label> 
                     <div class="col-md-10">
-                        <input type="text" name="placements" class="form-control" maxlength="200" required="" id="id_placements">
+                        <input type="text" name="placements" class="form-control" id="id_placements">
                     </div>
                 </div> 
         
@@ -112,7 +109,7 @@ Apps
                         <td>{{ all_app.package }}</td>
                         <td>
                             <figure class="figure">
-                                <img src="{{ all_app.icons.url }}" Icon" style="max-height: 50px; max-width: 50px;">
+                                <img src="{{ all_app.icons.url }}" style="max-height: 50px; max-width: 50px;">
                             </figure>
                         </td>
                         <td>{{ all_app.created_at }}</td>
@@ -122,7 +119,7 @@ Apps
                                     <i class="bx bx-dots-vertical-rounded"></i>
                                 </button>
                                 <div class="dropdown-menu">
-                                   <a class="dropdown-item" href="{% url 'update' all_app.id %}">Edit</a>
+                                   <a class="dropdown-item" href="{% url 'allapps' all_app.id %}">Edit</a>
                                    <a class="dropdown-item" href="{% url 'delete' all_app.id %}">Delete</a>
                                 </div>
                             </div>

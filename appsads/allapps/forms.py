@@ -39,3 +39,21 @@ class PlacementForm(forms.ModelForm):
             'added_by': _('Added By'),
             'app': _('App'),
         }
+
+
+class NetworkForm(forms.ModelForm):
+    class Meta:
+        model = AdNetwork
+        fields = ['title', 'added_by', 'app']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'added_by': forms.Select(attrs={'class': 'form-select'}),
+            'app': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+        labels = {
+            'title': _('Title'),
+            'added_by': _('Added By'),
+            'app': _('App'),
+        }
