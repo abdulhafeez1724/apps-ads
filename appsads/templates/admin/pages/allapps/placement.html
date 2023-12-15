@@ -1,0 +1,115 @@
+{% extends "../../app.html" %}
+{% load i18n static %}
+
+{% block title %}
+placement
+{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Create App -->
+    <div class="card mb-">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Add New Placement</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3 row">
+                    <label for="id_title" class="col-md-2 col-form-label">{{ form.title.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.title }}
+                        {{ form.title.errors }}
+                    </div>
+                </div>
+
+
+                <div class="mb-3 row">
+                    <label for="id_added_by" class="col-md-2 col-form-label">{{ form.added_by.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.added_by }}
+                        {{ form.added_by.errors }}
+                    </div>
+                </div>
+
+
+                <div class="mb-3 row">
+                    <label for="id_app" class="col-md-2 col-form-label">{{ form.app.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.app }}
+                        {{ form.app.errors }}
+                    </div>
+                </div>
+
+
+                
+        
+                <button type="submit" class="btn btn-primary">
+                    <span class="tf-icons bx bx-pie-chart-alt me-1"></span>Save
+                </button>
+            </form>
+        </div>
+        
+        
+        
+    </div>
+    <!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+    <!-- Basic Bootstrap Table -->
+    <div class="card">
+        <h5 class="card-header">All Apps</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sr#</th>
+                        <th>Placement</th>
+                        <th>Index</th>
+                        <th>Added On</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    {% for placement in placements %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            <strong>{{ placement.title }}</strong>
+                        </td>
+                        <td>{{ placement.index }}</td>
+                        
+                        </td>
+                        <td>{{ placement.created_at }}</td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                   <a class="dropdown-item" href="{% url 'update-placement' placement.id %}">Update</a>
+                                   <a class="dropdown-item" href="{% url 'delete-placement' placement.id %}">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--/ Basic Bootstrap Table -->
+
+
+</div>
+
+
+<!-- / Content -->
+{% endblock %}
+
+{% block js %}
+{% endblock js %}

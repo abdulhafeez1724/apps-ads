@@ -22,3 +22,20 @@ class AppsForm(forms.ModelForm):
             'platform': _('Platform'),
             'links': _('Links')
         }
+
+class PlacementForm(forms.ModelForm):
+    class Meta:
+        model = Placement
+        fields = ['title', 'added_by', 'app']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'added_by': forms.Select(attrs={'class': 'form-select'}),
+            'app': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+        labels = {
+            'title': _('Title'),
+            'added_by': _('Added By'),
+            'app': _('App'),
+        }
