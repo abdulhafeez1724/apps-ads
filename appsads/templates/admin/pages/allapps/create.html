@@ -1,0 +1,43 @@
+{% extends "../../app.html" %}
+{% load i18n static %}
+{% block title %}
+Create Effects
+{% endblock title %}
+{% block css %}
+<style>
+    .errorlist{
+        color:red !important;
+    }
+</style>
+{% endblock css %}
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <!-- Create Effect -->
+    <div class="card mb-4">
+      <h5 class="card-header">Create Effects</h5>
+       <div class="card-body">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3 row">
+                <label for="html5-text-input" class="col-md-2 col-form-label"></label> 
+                <div class="col-md-10">
+                
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+                <span class="tf-icons bx bx-pie-chart-alt me-1"></span>Save
+            </button>
+        </form>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+</script>
+{% endblock js %}
