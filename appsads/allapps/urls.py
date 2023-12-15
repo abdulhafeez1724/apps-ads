@@ -15,6 +15,6 @@ urlpatterns = [
     path('delete_placement/<int:id>/', delete_placement, name='delete-placement'),
 
     path('network/', create_network, name='network'),
-    path('network/<int:id>/', create_network, name='update_placement'),
+    path('network/<int:id>/', create_network, name='update_network'),
     path('delete_network/<int:id>/', delete_network, name='delete-network'),
 ]
