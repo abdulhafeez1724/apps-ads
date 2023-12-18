@@ -1,8 +1,11 @@
 from django.shortcuts import redirect, render, HttpResponse, get_object_or_404
-from .models import *
-from .forms import AppsForm, PlacementForm, NetworkForm
+from .models import * 
+from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET, require_POST
+import json
 
 # Create your views here.
 def home(request):
@@ -59,6 +62,7 @@ def delete_apps(request, id):
 
 @login_required 
 def create_placement(request, id=None):
+    apps = Apps.objects.filter(added_by=request.user)
     if id:
         placement = Placement.objects.get(id=id)
     if request.method == 'POST':
@@ -77,7 +81,26 @@ def create_placement(request, id=None):
     else:
         form = PlacementForm()
     placements = Placement.objects.all()
-    return render(request, 'admin/pages/allapps/placement.html', {'form': form,'placements': placements})
+    return render(request, 'admin/pages/allapps/placement.html', {'form': form,'placements': placements, 'apps': apps})
+
+@login_required
+def get_placement(request):
+    if request.method == 'POST':
+        app_id = request.POST.get('app_id')
+        app_instance = get_object_or_404(Apps, id=app_id)
+        placements = Placement.objects.filter(app=app_instance)
+        placement_list = [{'id': placement.id, 'title': placement.title, 'index': placement.index} for placement in placements]
+        return JsonResponse({'placement': placement_list})
+
+@require_POST
+def save_sorted_placement(request):
+    sorted_placements_id = request.POST.get('sorted_placements')
+    data = json.loads(sorted_placements_id)
+    for index, sorted_placements_id in enumerate(data, start=1):
+        placement = Placement.objects.get(id=sorted_placements_id)
+        placement.index = index
+        placement.save()
+    return JsonResponse({'success': True})
 
 def delete_placement(request, id):
     placement = Placement.objects.get(id=id)
@@ -85,6 +108,7 @@ def delete_placement(request, id):
     return redirect('placement')
 
 def create_network(request, id=None):
+    apps = Apps.objects.filter(added_by=request.user)
     if id:
         network = AdNetwork.objects.get(id=id)
     if request.method == 'POST':
@@ -103,8 +127,31 @@ def create_network(request, id=None):
     else: 
         form = NetworkForm() 
     networks = AdNetwork.objects.all()
-    return render(request, 'admin/pages/allapps/network.html', {'form': form,'networks': networks}) 
+    return render(request, 'admin/pages/allapps/network.html', {'form': form,'networks': networks, 'apps': apps}) 
+
+
+def get_network(request):
+    if request.method == 'POST':
+        app_id = request.POST.get('app_id')
+        app_instance = get_object_or_404(Apps, id=app_id)
+        networks = AdNetwork.objects.filter(app=app_instance)
+        network_list = [{'id': network.id, 'title': network.title, 'index': network.index} for network in networks]
+        return JsonResponse({'network': network_list})
+
+@require_POST
+def save_sorted_network(request):
+    sorted_networks_id = request.POST.get('sorted_networks')
     
+    if sorted_networks_id is not None:
+        data = json.loads(sorted_networks_id)
+        for index, sorted_network_id in enumerate(data, start=1):
+            network = AdNetwork.objects.get(id=sorted_network_id)
+            network.index = index
+            network.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'sorted_networks not found in POST data'}, status=400)
+
 def delete_network(request, id):
     network = AdNetwork.objects.get(id=id)
     network.delete()
