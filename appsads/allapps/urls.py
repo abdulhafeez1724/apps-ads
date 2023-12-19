@@ -21,4 +21,15 @@ urlpatterns = [
     path('get_network/', get_network, name='get_network'),
     path('save_sorted_network/', save_sorted_network, name='save_sorted_network'),
     path('delete_network/<int:id>/', delete_network, name='delete-network'),
+
+    path('source/', create_source, name='source'),
+    path('create_source/', create_source, name='create_source'),
+    path('update_source/<int:id>/', create_source, name='update_source'),
+    path('delete_source/<int:id>/', delete_source, name='delete_source'),
+    path('source/<int:id>/', create_source, name='update_source'),
+    
+    path('get_placement_options/', get_placement_options, name='get_placement_options'),
+    path('get_network_options/', get_network_options, name='get_network_options'),
+
+
 ]

@@ -12,7 +12,7 @@ class AppsForm(forms.ModelForm):
             'icons': forms.FileInput(attrs={'class': 'form-select'}),
             'package': forms.TextInput(attrs={'class': 'form-control'}),
             'platform': forms.Select(attrs={'class': 'form-select'}),
-            'links': forms.URLInput(attrs={'class': 'form-control'})
+            'links': forms.URLInput(attrs={'class': 'form-control'}),
         }
         
         labels = {
@@ -20,7 +20,9 @@ class AppsForm(forms.ModelForm):
             'icons': _('Icons'),
             'package': _('Package'),
             'platform': _('Platform'),
-            'links': _('Links')
+            'links': _('Links'),
+            'adnetwork': _('Ad Network'),
+            'placements': _('Placements'),
         }
 
 class PlacementForm(forms.ModelForm):
@@ -56,4 +58,23 @@ class NetworkForm(forms.ModelForm):
             'title': _('Title'),
             'added_by': _('Added By'),
             'app': _('App'),
+        }
+
+class SourceForm(forms.ModelForm):
+    class Meta:
+        model = Source
+        fields = ['app', 'network', 'placement', 'paragraphes']
+
+        widgets = {
+            'app': forms.Select(attrs={'class': 'form-select'}),
+            'network': forms.Select(attrs={'class': 'form-select'}),
+            'placement': forms.Select(attrs={'class': 'form-select'}),
+            'paragraphes': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+        labels = {
+            'app': _('App'),
+            'network': _('Network'),
+            'placement': _('Placement'),
+            'paragraphes': _('Paragraphes'),
         }

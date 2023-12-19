@@ -5,3 +5,4 @@ from .models import *
 admin.site.register(Apps)
 admin.site.register(Placement)
 admin.site.register(AdNetwork)
+admin.site.register(Source)

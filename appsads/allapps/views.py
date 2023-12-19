@@ -156,3 +156,54 @@ def delete_network(request, id):
     network = AdNetwork.objects.get(id=id)
     network.delete()
     return redirect('network')
+
+
+def create_source(request, id=None):
+    print("Entering create_source view")
+
+    apps = Apps.objects.filter(added_by=request.user)
+    if id:
+        print(f"Fetching source with id={id}")
+        source = Source.objects.get(id=id)
+
+    if request.method == 'POST':
+        print("POST request received")
+        if id:
+            form = SourceForm(request.POST, request.FILES, instance=source)
+        else:
+            form = SourceForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            print("Form is valid")
+            source = form.save(commit=False)
+            source.added_by = request.user
+            source.save()
+            return redirect('source')
+        else:
+            print("Form is not valid")
+            print(form.errors)
+
+    if id:
+        print(f"Rendering form for editing source with id={id}")
+        form = SourceForm(instance=Source.objects.get(id=id))
+    else:
+        print("Rendering empty form for creating a new source")
+        form = SourceForm()
+
+    sources = Source.objects.all()
+    return render(request, 'admin/pages/allapps/source.html', {'form': form, 'sources': sources, 'apps': apps})
+
+def delete_source(request, id):
+    source = Source.objects.get(id=id)
+    source.delete()
+    return redirect('source')
+
+def get_placement_options(request):
+    app_id = request.GET.get('app_id')
+    placements = Placement.objects.filter(app_id=app_id).values('id', 'title')
+    return JsonResponse(list(placements), safe=False)
+
+def get_network_options(request):
+    app_id = request.GET.get('app_id')
+    networks = AdNetwork.objects.filter(app_id=app_id).values('id', 'title')
+    return JsonResponse(list(networks), safe=False)
