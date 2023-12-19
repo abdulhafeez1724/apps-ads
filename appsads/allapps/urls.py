@@ -24,11 +24,12 @@ urlpatterns = [
 
     path('source/', create_source, name='source'),
     path('create_source/', create_source, name='create_source'),
+    path('get_source/', get_source, name='get_source'),
+    path('save_sorted_source/', save_sorted_source, name='save_sorted_source'),
     path('update_source/<int:id>/', create_source, name='update_source'),
     path('delete_source/<int:id>/', delete_source, name='delete_source'),
     path('source/<int:id>/', create_source, name='update_source'),
     
-    path('get_placement_options/', get_placement_options, name='get_placement_options'),
     path('get_network_options/', get_network_options, name='get_network_options'),
 
 

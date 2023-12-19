@@ -63,18 +63,18 @@ class NetworkForm(forms.ModelForm):
 class SourceForm(forms.ModelForm):
     class Meta:
         model = Source
-        fields = ['app', 'network', 'placement', 'paragraphes']
+        fields = ['app', 'network', 'placement', 'data']
 
         widgets = {
             'app': forms.Select(attrs={'class': 'form-select'}),
             'network': forms.Select(attrs={'class': 'form-select'}),
             'placement': forms.Select(attrs={'class': 'form-select'}),
-            'paragraphes': forms.TextInput(attrs={'class': 'form-control'}),
+            'data': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
         labels = {
             'app': _('App'),
             'network': _('Network'),
             'placement': _('Placement'),
-            'paragraphes': _('Paragraphes'),
+            'data': _('data'),
         }

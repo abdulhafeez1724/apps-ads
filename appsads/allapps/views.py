@@ -83,6 +83,7 @@ def create_placement(request, id=None):
     placements = Placement.objects.all()
     return render(request, 'admin/pages/allapps/placement.html', {'form': form,'placements': placements, 'apps': apps})
 
+
 @login_required
 def get_placement(request):
     if request.method == 'POST':
@@ -92,6 +93,7 @@ def get_placement(request):
         placement_list = [{'id': placement.id, 'title': placement.title, 'index': placement.index} for placement in placements]
         return JsonResponse({'placement': placement_list})
 
+@login_required
 @require_POST
 def save_sorted_placement(request):
     sorted_placements_id = request.POST.get('sorted_placements')
@@ -102,11 +104,12 @@ def save_sorted_placement(request):
         placement.save()
     return JsonResponse({'success': True})
 
+@login_required
 def delete_placement(request, id):
     placement = Placement.objects.get(id=id)
     placement.delete()
     return redirect('placement')
-
+@login_required
 def create_network(request, id=None):
     apps = Apps.objects.filter(added_by=request.user)
     if id:
@@ -130,6 +133,7 @@ def create_network(request, id=None):
     return render(request, 'admin/pages/allapps/network.html', {'form': form,'networks': networks, 'apps': apps}) 
 
 
+@login_required
 def get_network(request):
     if request.method == 'POST':
         app_id = request.POST.get('app_id')
@@ -138,6 +142,7 @@ def get_network(request):
         network_list = [{'id': network.id, 'title': network.title, 'index': network.index} for network in networks]
         return JsonResponse({'network': network_list})
 
+@login_required
 @require_POST
 def save_sorted_network(request):
     sorted_networks_id = request.POST.get('sorted_networks')
@@ -152,12 +157,14 @@ def save_sorted_network(request):
     else:
         return JsonResponse({'error': 'sorted_networks not found in POST data'}, status=400)
 
+@login_required
 def delete_network(request, id):
     network = AdNetwork.objects.get(id=id)
     network.delete()
     return redirect('network')
 
 
+@login_required
 def create_source(request, id=None):
     print("Entering create_source view")
 
@@ -191,19 +198,45 @@ def create_source(request, id=None):
         form = SourceForm()
 
     sources = Source.objects.all()
-    return render(request, 'admin/pages/allapps/source.html', {'form': form, 'sources': sources, 'apps': apps})
+    return render(request, 'admin/pages/allapps/priority_network.html', {'form': form, 'sources': sources, 'apps': apps})
 
+@login_required
+def get_source(request):
+    if request.method == 'POST':
+        app_id = request.POST.get('app_id')
+        placement_id = request.POST.get('placement_id')
+        sources = Source.objects.filter(app=app_id, placement=placement_id)
+        source_list = [
+            {'id': source.id, 'title': source.network.title, 'index': source.index}
+            for source in sources
+        ]
+        return JsonResponse({'source': source_list})
+
+
+@login_required
+@require_POST
+def save_sorted_source(request):
+    sorted_sources_id = request.POST.get('sorted_sources')
+    
+    if sorted_sources_id is not None:
+        data = json.loads(sorted_sources_id)
+        for index, sorted_source_id in enumerate(data, start=1):
+            source = Source.objects.get(id=sorted_source_id)
+            source.index = index
+            source.save()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'error': 'sorted_sources not found in POST data'}, status=400)
+
+@login_required
 def delete_source(request, id):
     source = Source.objects.get(id=id)
     source.delete()
     return redirect('source')
 
-def get_placement_options(request):
-    app_id = request.GET.get('app_id')
-    placements = Placement.objects.filter(app_id=app_id).values('id', 'title')
-    return JsonResponse(list(placements), safe=False)
-
+@login_required
 def get_network_options(request):
     app_id = request.GET.get('app_id')
     networks = AdNetwork.objects.filter(app_id=app_id).values('id', 'title')
-    return JsonResponse(list(networks), safe=False)
+    placements = Placement.objects.filter(app_id=app_id).values('id', 'title')
+    return JsonResponse({'networks': list(networks), 'placements': list(placements)}, safe=False)

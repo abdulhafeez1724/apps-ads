@@ -17,7 +17,7 @@ def register(request):
             user.username = user.username.lower()
             user.save()
             messages.success(request, 'You have register successfully.')
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         else:
             messages.error(request, 'Error in the registration form. Please try again.')

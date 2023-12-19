@@ -1,0 +1,268 @@
+{% extends "../../app.html" %}
+{% load i18n static %}
+
+{% block title %}
+Priority
+{% endblock title %}
+
+{% block css %}
+{% endblock css %}
+
+{% block content %}
+<!-- Content -->
+<div class="container-xxl flex-grow-1 container-p-y">
+
+    <div class="mb-3">
+        <label class="form-label">Add Priority Network sorting with placement</label>
+        <select id="apps_select" class="form-select">
+            <option value="">Select App</option>
+            {% for app in apps %}
+                <option value="{{ app.id }}">{{ app.name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+
+        <select id="source_select" class="form-select">
+            <option value="">Select Placement</option>
+        </select>
+    </div>
+    
+
+    <div class="mb-3">
+        <button class="btn btn-primary" onclick="event.preventDefault(); selectapps($('#apps_select :selected').val(), $('#source_select :selected').val())" data-bs-toggle="modal" data-bs-target="#appsmodal">
+            App sorting with placement
+        </button>
+    </div>
+
+
+    <!-- Create Source -->
+    <div class="card mb-">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Source</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+    
+                <div class="mb-3 row">
+                    <label for="id_app" class="col-md-2 col-form-label">{{ form.app.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.app }}
+                        {{ form.app.errors }}
+                    </div>
+                </div>
+    
+                <div class="mb-3 row">
+                    <label for="id_network" class="col-md-2 col-form-label">{{ form.network.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.network }}
+                        {{ form.network.errors }}
+                    </div>
+                </div>
+    
+                <div class="mb-3 row">
+                    <label for="id_placement" class="col-md-2 col-form-label">{{ form.placement.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.placement }}
+                        {{ form.placement.errors }}
+                    </div>
+                </div>
+    
+                <div class="mb-3 row">
+                    <label for="id_paragraphes" class="col-md-2 col-form-label">{{ form.data.label }}</label>
+                    <div class="col-md-10">
+                        {{ form.data }}
+                        {{ form.data.errors }}
+                    </div>
+                </div>
+    
+                <button type="submit" class="btn btn-primary">
+                    <span class="tf-icons bx bx-pie-chart-alt me-1"></span>Save
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- Content -->
+
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <!-- Basic Bootstrap Table -->
+        <div class="card">
+            <h5 class="card-header">All Source</h5>
+            <div class="table-responsive text-nowrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sr#</th>
+                            <th>App</th>
+                            <th>NETWORK</th>
+                            <th>PLACEMENT</th>
+                            <th>Paragraph</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        {% for source in sources %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                                <strong>{{ source.app }}</strong>
+                            </td>
+                            <td>{{ source.network }}</td>
+                            <td>{{ source.placement }}</td>
+                            <td>{{ source.paragraphes}}</td>
+                            <td>{{ source.created_at }}</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <i class="bx bx-dots-vertical-rounded"></i>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                       <a class="dropdown-item" href="{% url 'update_source' source.id %}">Update</a>
+                                       <a class="dropdown-item" href="{% url 'delete_source' source.id %}">Delete</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+            </div>
+        </div>
+
+        <div class="modal fade" id="appsmodal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="categoryModalLabel">Priority Network Sorting</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <tbody id="sortable-modal">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="saveOrderBtn" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <!--/ Basic Bootstrap Table -->
+{% endblock %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    function selectapps(app_id, placement_id) {
+        console.log("Selected App: ", app_id);
+        let _url = "{% url 'get_source' %}";
+
+        $.ajax({
+            url: _url,
+            type: "POST",
+            data: {
+                'app_id': app_id,
+                'placement_id': placement_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                console.log("Server Response:", response);
+                $("#sortable-modal").sortable();
+                $('#sortable-modal').empty();
+
+                // Append data
+                $.each(response.source, function(index, source) {
+                    $('#sortable-modal').append('<tr data-id="' + source.id + '">' +
+                        '<td>' + source.index + '</td>' +
+                        '<td>' + source.title + '</td>' +
+                        '</tr>');
+                });
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        // Use a more specific identifier for the "Save Changes" button
+        $('#saveOrderBtn').on('click', function() {
+            // Get the sorted order of placement
+            var sortedSource = [];
+            $('#sortable-modal tr').each(function() {
+                sortedSource.push($(this).data('id'));
+            });
+            console.log('Sorted Source IDs:', sortedSource);
+
+            
+            var _url = "{% url 'save_sorted_source' %}";
+            
+            var data = JSON.stringify(sortedSource);
+
+            $.ajax({
+                url: _url,
+                type: "POST",
+                data: {
+                    'sorted_sources': data,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        swal("Status", "Sorted source Updated", "success");
+                        location.reload();
+                    } else {
+                        swal("Error", "Failed to update sorted source", "error");
+                    }
+                },
+                error: function(xhr, text, err) {
+                    console.log(xhr, text, err);
+                    swal("Error", "Failed to update sorted source", "error");
+                }
+            });
+            
+        });
+
+        $("#apps_select").change(function () {
+            var app_id = $(this).val();
+            $.ajax({
+                url: '{% url 'get_network_options' %}',
+                data: {'app_id': app_id},
+                dataType: 'json',
+                success: function (data) {
+                    $('#source_select').html("");
+                    $.each(data.placements, function(index, placement) {
+                        $('#source_select').append('<option value="' + placement.id + '">' + placement.title + '</option>');
+                    })
+                }
+            });
+        });
+
+        $('#id_app').change(function () {
+            var app_id = $(this).val();
+            $.ajax({
+                url: '{% url 'get_network_options' %}',
+                data: {'app_id': app_id},
+                dataType: 'json',
+                success: function (data) {
+                    $('#id_network').html("");
+                    $('#id_placement').html("");
+                    $.each(data.networks, function(index, network) {
+                        $('#id_network').append('<option value="' + network.id + '">' + network.title + '</option>');
+                    })
+                    $.each(data.placements, function(index, placement) {
+                        $('#id_placement').append('<option value="' + placement.id + '">' + placement.title + '</option>');
+                    })
+                }
+            });
+        });
+    });
+</script>
+{% endblock js %}
