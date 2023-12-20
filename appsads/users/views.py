@@ -1,6 +1,5 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login
 from .forms import RegistrationForm
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
@@ -17,7 +16,7 @@ def register(request):
             user.username = user.username.lower()
             user.save()
             messages.success(request, 'You have register successfully.')
-            login(request, user)
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect('home')
         else:
             messages.error(request, 'Error in the registration form. Please try again.')

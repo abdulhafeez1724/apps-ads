@@ -11,4 +11,3 @@ class  NewUser(AbstractUser):
         
     name  = models.CharField(max_length=150, blank=False)
     platform = models.CharField('Platform', max_length=50, choices=Platform.choices, default=Platform.ANDROID, blank=False)
-    

@@ -11,6 +11,20 @@ placement
 {% block content %}
 <!-- Content -->
 <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="mb-3">
+        <label class="form-label">App sorting with Network</label>
+        <select id="apps_select" class="form-select">
+            {% for app in apps %}
+                <option value="{{ app.id }}">{{ app.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <button class="btn btn-primary" onclick="event.preventDefault(); selectapps($('#apps_select :selected').val())" data-bs-toggle="modal" data-bs-target="#appsmodal">
+            App sorting with Network
+        </button>
+    </div>
     <!-- Create App -->
     <div class="card mb-">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -102,6 +116,28 @@ placement
             </table>
         </div>
     </div>
+
+
+    <div class="modal fade" id="appsmodal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="categoryModalLabel">Network Sorting</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <tbody id="sortable-modal">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="saveOrderBtn" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--/ Basic Bootstrap Table -->
 
 
@@ -112,4 +148,68 @@ placement
 {% endblock %}
 
 {% block js %}
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    function selectapps(app_id) {
+        console.log("Selected App: ", app_id);
+        let _url = "{% url 'get_network' %}";
+
+        $.ajax({
+            url: _url,
+            type: "POST",
+            data: {
+                'app_id': app_id,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                console.log("Server Response:", response);
+                $("#sortable-modal").sortable();
+                $('#sortable-modal').empty();
+
+                // Append data
+                $.each(response.network, function(index, network) {
+                    $('#sortable-modal').append('<tr data-id="' + network.id + '">' +
+                        '<td>' + (network.index) + '</td>' +
+                        '<td>' + network.title + '</td>' +
+                        '</tr>');
+                });
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('#saveOrderBtn').on('click', function() {
+            // Get the sorted order of placement
+            var sortedNetwork = [];
+            $('#sortable-modal tr').each(function() {
+                sortedNetwork.push($(this).data('id'));
+            });
+            console.log('Sorted Network IDs:', sortedNetwork);
+            //Send the sorted order to the server for saving
+            var _url = "{% url 'save_sorted_network' %}";
+            data = JSON.stringify(sortedNetwork);
+
+            $.ajax({
+                url: _url,
+                type: "POST",
+                data: {
+                   // sortedNetwork: data,
+                   sorted_networks: data,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    swal("Status", "sorted Placement Updated", "success");
+                    location.reload();
+                },
+                error: function(xhr, text, err) {
+                    console.log(xhr, text, err);
+                }
+            });
+            $('#parentmodal').modal('hide');
+        });
+    });
+</script>
 {% endblock js %}

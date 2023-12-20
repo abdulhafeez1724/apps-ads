@@ -31,6 +31,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'allapps',
+    'graphene_django',
+]
+GRAPHENE = {
+    'SCHEMA': 'appsads.schema.schema',
+    'MIDDLEWARE': [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ]
+}
+
+AUTHENTICATION_BACKENDS = [
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 AUTH_USER_MODEL = 'users.NewUser'
