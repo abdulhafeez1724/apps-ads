@@ -33,8 +33,6 @@ Priority
             App sorting with placement
         </button>
     </div>
-
-
     <!-- Create Source -->
     <div class="card mb-">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -69,7 +67,7 @@ Priority
                 </div>
     
                 <div class="mb-3 row">
-                    <label for="id_paragraphes" class="col-md-2 col-form-label">{{ form.data.label }}</label>
+                    <label for="id_data" class="col-md-2 col-form-label">{{ form.data.label }}</label>
                     <div class="col-md-10">
                         {{ form.data }}
                         {{ form.data.errors }}
@@ -82,8 +80,6 @@ Priority
             </form>
         </div>
     </div>
-    
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- Content -->
 
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -98,7 +94,7 @@ Priority
                             <th>App</th>
                             <th>NETWORK</th>
                             <th>PLACEMENT</th>
-                            <th>Paragraph</th>
+                            <th>Data</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -111,7 +107,7 @@ Priority
                             </td>
                             <td>{{ source.network }}</td>
                             <td>{{ source.placement }}</td>
-                            <td>{{ source.paragraphes}}</td>
+                            <td>{{ source.data}}</td>
                             <td>{{ source.created_at }}</td>
                             <td>
                                 <div class="dropdown">
@@ -152,10 +148,8 @@ Priority
                 </div>
             </div>
         </div>
-
     </div>
-
-        <!--/ Basic Bootstrap Table -->
+ <!--/ Basic Bootstrap Table -->
 {% endblock %}
 
 {% block js %}

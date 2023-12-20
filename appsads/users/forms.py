@@ -15,24 +15,3 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = NewUser
         fields = ['name', 'username', 'email', 'platform']
-
-
-    # widgets = {
-    #     'name': forms.TextInput(attrs={'class': 'form-control'}),
-    #     'username': forms.TextInput(attrs={'class': 'form-control'}),
-    #     'email': forms.TextInput(attrs={'class': 'form-control'}),
-    #     'password1': forms.PasswordInput(attrs={'class': 'form-control'}),
-    #     'confirm_password': forms.PasswordInput(attrs={'class': 'form-control'}),
-    #     'platform': forms.Select(attrs={'class': 'form-select'}),
-    #  }
-    
-
-    # labels  = {
-    #    'name': _('name'),
-    #    'username': _('username'),
-    #    'email': _('email'),
-    #    'password1': _('password1'),
-    #    'confirm_password': _('confirm_password'),
-    #    'platform': _('platform'),
-       
-    # }

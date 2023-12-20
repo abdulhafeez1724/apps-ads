@@ -59,4 +59,8 @@ class Source(models.Model):
     index = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.paragraphes
+        return self.data
+    
+    class Meta:
+        # order by
+        ordering = ['index']
